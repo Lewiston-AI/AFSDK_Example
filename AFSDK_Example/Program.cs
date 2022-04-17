@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using OSIsoft.AF.PI;
+using OSIsoft.AF.Asset;
 
 namespace AFSDK_Example {
     class Program {
@@ -27,8 +28,9 @@ namespace AFSDK_Example {
                 if (server != null) {
                     server.Connect();
                     System.Console.WriteLine($"Connected: {server.ConnectionInfo.IsConnected} PIServer: {server.ConnectionInfo.PIServer.Name} Port: {server.ConnectionInfo.Port} Point count: {server.GetPointCount()}");
-                    List<int> pointids = get_pointids(server, tagList.tags);
-                    System.Console.WriteLine($"{pointids.Count} out of {tagList.tags.Count} PIPoints found");
+                    PIPointList points = get_pointids(server, tagList.tags);
+                    System.Console.WriteLine($"{points.Count} out of {tagList.tags.Count} PIPoints found");
+                    get_archive_data(server, points);
                 } else {
                     System.Console.WriteLine($"Server {tagList.server} is not in the Known Servers Table (KST)");
                 }
@@ -37,22 +39,32 @@ namespace AFSDK_Example {
                 System.Console.WriteLine($"{ex.Message}");
             }
         }
-        static List<int> get_pointids (PIServer server, List<String> tags) {
-            List<int> pointids = new List<int>();
+        static PIPointList get_pointids (PIServer server, List<String> tags) {
+            PIPointList points = new PIPointList();
             foreach ( String tag in tags) {
                 try {
                     PIPoint pt = PIPoint.FindPIPoint(server, tag);
-                    pointids.Add(pt.ID);
+                    points.Add(pt);
 
                 } catch (Exception ex) {
                     System.Console.WriteLine($"Error finding point {tag} {ex.Message}");
                 }
             }
-            return pointids; 
+            return points; 
         }
-        static void get_archive_data(PIServer server, List<int> pointids) {
-            if (pointids.Count > 0) {
-
+        static void get_archive_data(PIServer server, PIPointList points) {
+            if (points.Count > 0) {
+                OSIsoft.AF.Time.AFTimeRange timeRange = new OSIsoft.AF.Time.AFTimeRange("*-1h", "*");
+                OSIsoft.AF.Data.AFBoundaryType boundaryType = 0;
+                String filterExpression = "";
+                bool includeFilteredValues = false;
+                PIPagingConfiguration pagingConfig = new PIPagingConfiguration(OSIsoft.AF.PI.PIPageType.EventCount, 1000000);
+                //int maxCount = 1000;
+                foreach (AFValues afVals in points.RecordedValues(timeRange, boundaryType, filterExpression, includeFilteredValues, pagingConfig)) {
+                    foreach(AFValue afVal in afVals) {
+                        Console.WriteLine($"{afVal.PIPoint.ID} {afVal.Timestamp}, {afVal.Value}");
+                    }
+                }
             }
         }
     }
