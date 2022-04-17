@@ -1,0 +1,34 @@
+{
+	"lists": [
+		{
+			"server": "ec2-54-200-148-162.us-west-2.compute.amazonaws.com",
+			"port": 5450,
+			"tags": [
+				"sinusoid",
+				"sinusoidu",
+				"cdep158",
+				"cdt158",
+				"cdm158",
+				"ba:conc.1",
+				"ba:level.1",
+				"ba:temp.1",
+				"this tag does not exist"
+			]
+		},
+		{
+			"server": "another server",
+			"port": 5450,
+			"tags": [
+				"sinusoid",
+				"sinusoidu",
+				"cdep158",
+				"cdt158",
+				"cdm158",
+				"ba:conc.1",
+				"ba:level.1",
+				"ba:temp.1",
+				"this tag does not exist"
+			]
+		}
+	]
+}
