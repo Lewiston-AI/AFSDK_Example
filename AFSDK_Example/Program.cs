@@ -12,7 +12,7 @@ namespace AFSDK_Example {
     class Program {
         static void Main(string[] args) {
             TagLists tagLists;
-            String listsFile = "tag_lists.json";
+            String listsFile = "tag_lists.json";  // hard coded needs to be in working directory
             String data = File.ReadAllText(listsFile);
             tagLists = JsonConvert.DeserializeObject<TagLists>(data);
             foreach (TagList tagList in tagLists.lists) {
