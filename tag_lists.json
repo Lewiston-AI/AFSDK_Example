@@ -1,8 +1,13 @@
 {
 	"lists": [
 		{
+			"comment": "",
 			"server": "ec2-54-200-148-162.us-west-2.compute.amazonaws.com",
 			"port": 5450,
+			"start": "*-1w",
+			"end": "*",
+			"pageSize": 100,
+			"showSamples": false,
 			"tags": [
 				"sinusoid",
 				"sinusoidu",
@@ -12,12 +17,27 @@
 				"ba:conc.1",
 				"ba:level.1",
 				"ba:temp.1",
+				"sin:hour",
+				"SINUSOID_Step",
+				"Sinusoid_Timestamp",
+				"SeeqSinusoid",
+				"BA:TEMP.1",
+				"BA:CONC.1",
+				"BA:LEVEL.1",
+				"BaGen:Level.1",
+				"BaGen:CONC.1",
+				"BaGen:Temp.1",
 				"this tag does not exist"
 			]
 		},
 		{
+			"comment": "",
 			"server": "another server",
 			"port": 5450,
+			"start": "*-1w",
+			"end": "*",
+			"pageSize": 2,
+			"showSamples": false,
 			"tags": [
 				"sinusoid",
 				"sinusoidu",
