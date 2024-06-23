@@ -8,21 +8,28 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using OSIsoft.AF.PI;
 using OSIsoft.AF.Asset;
+using AFSDK_Example;
 
 namespace AFSDK_Example {
     class Program {
         static void Main(string[] args) {
             TagLists tagLists;
             String listsFile="";
-            if ( (args.Length == 2) && (args[0] == "-c" ) ) {
+            String efFile = "";
+            if ( (args.Length >= 2) && (args[0] == "-c" ) ) {
                 listsFile = args[1];
+                if (args.Length == 3) {
+                    efFile = args[2]; 
+                }
             } else {
                 Console.WriteLine("Prints help:");
                 Console.WriteLine("\tAFSDK_Example -h");
                 Console.WriteLine("To run the application: ");
-                Console.WriteLine("\tAFSDK_Example -c path_to_json_file");
+                Console.WriteLine("\tAFSDK_Example -c path_to_json_file path_to_json_EF_file");
                 System.Environment.Exit(1);
-            } 
+            }
+            EventFrameExamples efExample = new EventFrameExamples(efFile);
+            efExample.Test_event_frames();
             Console.WriteLine($"Attempting to read {listsFile}");
             try {
                 String data = File.ReadAllText(listsFile);
