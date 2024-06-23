@@ -20,9 +20,9 @@ namespace AFSDK_Example {
         public int Connect() {
             piSystem = new PISystems().DefaultPISystem;
             credential = new System.Net.NetworkCredential();
-            credential.UserName = "piadm";
-            credential.Domain = "seeqpiaf";
-            credential.Password = "SeeQ2013!@#$";
+            credential.UserName = "xxxxxxxxxx";
+            credential.Domain = "xxxxxxxxxxxxxxxxxxxxxxx";
+            credential.Password = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
             try {
                 piSystem.Connect(credential);
                 Console.WriteLine($"Successful connection to {piSystem.Name}");
