@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using OSIsoft.AF.PI;
 using OSIsoft.AF.Asset;
+using OSIsoft.AF.Search; 
 using AFSDK_Example;
 
 namespace AFSDK_Example {
@@ -46,6 +47,7 @@ namespace AFSDK_Example {
             PIServers servers = new PIServers();
             PIServer server;
             System.Console.WriteLine($"processing tags for {tagList.server}");
+            
             Stopwatch sw = new Stopwatch();
             sw.Start();
             try {
@@ -53,6 +55,7 @@ namespace AFSDK_Example {
                 if (server != null) {
                     server.Connect();
                     System.Console.WriteLine($"Connected: {server.ConnectionInfo.IsConnected} PIServer: {server.ConnectionInfo.PIServer.Name} Port: {server.ConnectionInfo.Port} Point count: {server.GetPointCount()}");
+                    IEnumerable<PIPoint> test = get_points_by_ptsource(server, "R");
                     PIPointList points = get_pointids(server, tagList.tags);
                     System.Console.WriteLine($"{points.Count} out of {tagList.tags.Count} PIPoints found");
                     Stopwatch sw1 = new Stopwatch();
@@ -69,6 +72,52 @@ namespace AFSDK_Example {
             }
             sw.Stop();
             System.Console.WriteLine($"Total time: {sw.Elapsed.TotalSeconds} seconds");
+        }
+        static IEnumerable<PIPoint> get_points_by_ptsource ( PIServer server, String ptSource) {
+            //https://github.com/bzshang/PI-AF-SDK-Basic-Samples/blob/master/ExamplesLibrary/PIPointExamples/FindPIPointsExample.cs
+            IEnumerable<PIPoint> points;
+            PIPointQuery ptSourceQuery = new PIPointQuery {
+                AttributeName = PICommonPointAttributes.PointSource,
+                AttributeValue = ptSource,
+                Operator = AFSearchOperator.Equal
+            };
+            IEnumerable<PIPointQuery> query = new[] { ptSourceQuery, };
+            
+            IEnumerable<string> attributesToLoad = new[] {
+                PICommonPointAttributes.Archiving,
+                PICommonPointAttributes.Compressing,
+                PICommonPointAttributes.CompressionDeviation,
+                PICommonPointAttributes.CompressionMaximum,
+                PICommonPointAttributes.CompressionMinimum,
+                PICommonPointAttributes.CompressionPercentage,
+                PICommonPointAttributes.Descriptor,
+                PICommonPointAttributes.EngineeringUnits,
+                PICommonPointAttributes.ExceptionDeviation,
+                PICommonPointAttributes.ExceptionMaximum,
+                PICommonPointAttributes.ExceptionMinimum,
+                PICommonPointAttributes.ExceptionPercentage,
+                PICommonPointAttributes.ExtendedDescriptor,
+                PICommonPointAttributes.InstrumentTag,
+                PICommonPointAttributes.Location1,
+                PICommonPointAttributes.Location4,
+                PICommonPointAttributes.PointID,
+                PICommonPointAttributes.PointSource,
+                PICommonPointAttributes.PointType,
+                PICommonPointAttributes.SourcePointID,
+                PICommonPointAttributes.Span,
+                PICommonPointAttributes.Step,
+                PICommonPointAttributes.Tag,
+                PICommonPointAttributes.Zero,
+            };
+            points = PIPoint.FindPIPoints(server, query, attributesToLoad);
+            foreach (PIPoint pt in points) {
+                Console.WriteLine($"{pt.ID}:");
+                foreach (String attr in attributesToLoad) {
+                    Console.WriteLine($"\t{attr}:\t {pt.GetAttribute(attr)}");
+                }
+            }
+
+                return points;
         }
         static PIPointList get_pointids (PIServer server, List<String> tags) {
             PIPointList points = new PIPointList();

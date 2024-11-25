@@ -2,7 +2,7 @@
 	"lists": [
 		{
 			"comment": "",
-			"server": "ec2-54-200-148-162.us-west-2.compute.amazonaws.com",
+			"server": "localhost",
 			"port": 5450,
 			"start": "*-1w",
 			"end": "*",
